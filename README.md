@@ -1,40 +1,40 @@
-mysqlstore
+sqlitestore
 ==========
 
-Gorilla's Session Store Implementation for MySQL
+Gorilla's Session Store Implementation for SQLite
 
 Installation
 ===========
 
-Run `go get github.com/srinathgs/mysqlstore` from command line. Gets installed in `$GOPATH`
+Run `go get github.com/michaeljs1990/sqlitestore` from command line. Gets installed in `$GOPATH`
 
 Usage
 =====
 
-`NewMysqlStore` takes the following paramaters
+`NewSqliteStore` takes the following paramaters
 
     endpoint - A sql.Open style endpoint
     tableName - table where sessions are to be saved. Required fields are created automatically if the table doesnot exist.
     path - path for Set-Cookie header
-    maxAge 
+    maxAge
     codecs
 
-Internally, `mysqlstore` uses [this](https://github.com/go-sql-driver/mysql) MySQL driver.
+Internally, `sqlitestore` uses [this](https://github.com/mattn/go-sqlite3) SQLite driver.
 
 e.g.,
-      
+
 
       package main
-  
+
       import (
   	    "fmt"
-  	    "github.com/srinathgs/mysqlstore"
+  	    "github.com/michaeljs1990/sqlitestore"
   	    "net/http"
       )
-  
-      var store, _ = mysqlstore.NewMySQLStore("UN:PASS@tcp(<IP>:<PORT>)/<DB>?parseTime=true&loc=Local", <tablename>, "/", 3600, []byte("<SecretKey>"))
+
+      var store, _ = sqlitestore.NewSqliteStore("./database", "sessions", "/", 3600, []byte("<SecretKey>"))
       defer store.Close()
-  
+
       func sessTest(w http.ResponseWriter, r *http.Request) {
   	    session, err := store.Get(r, "foobar")
   	    session.Values["bar"] = "baz"
