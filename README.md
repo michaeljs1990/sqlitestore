@@ -31,10 +31,16 @@ e.g.,
   	    "github.com/michaeljs1990/sqlitestore"
   	    "net/http"
       )
-
-      var store, _ = sqlitestore.NewSqliteStore("./database", "sessions", "/", 3600, []byte("<SecretKey>"))
-      defer store.Close()
-
+      
+      var store sqlitestore.Sqlite
+      func init() {
+         var err error
+         store, err = sqlitestore.NewSqliteStore("./database", "sessions", "/", 3600, []byte("<SecretKey>"))
+         if err != nil {
+             panic(err)
+         } 
+      }
+      
       func sessTest(w http.ResponseWriter, r *http.Request) {
   	    session, err := store.Get(r, "foobar")
   	    session.Values["bar"] = "baz"
