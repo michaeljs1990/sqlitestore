@@ -141,7 +141,6 @@ func (m *SqliteStore) New(r *http.Request, name string) (*sessions.Session, erro
 		if err == nil {
 			err = m.load(session)
 			if err == nil {
-				fmt.Println(err)
 				session.IsNew = false
 			} else {
 				err = nil
