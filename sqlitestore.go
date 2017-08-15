@@ -22,7 +22,7 @@ import (
 )
 
 type SqliteStore struct {
-	db         *sql.DB
+	db         DB
 	stmtInsert *sql.Stmt
 	stmtDelete *sql.Stmt
 	stmtUpdate *sql.Stmt
@@ -41,6 +41,12 @@ type sessionRow struct {
 	expiresOn  time.Time
 }
 
+type DB interface {
+	Exec(query string, args ...interface{}) (sql.Result, error) 
+	Prepare(query string) (*sql.Stmt, error)
+	Close() error
+}
+
 func init() {
 	gob.Register(time.Time{})
 }
@@ -54,7 +60,7 @@ func NewSqliteStore(endpoint string, tableName string, path string, maxAge int, 
 	return NewSqliteStoreFromConnection(db, tableName, path, maxAge, keyPairs...)
 }
 
-func NewSqliteStoreFromConnection(db *sql.DB, tableName string, path string, maxAge int, keyPairs ...[]byte) (*SqliteStore, error) {
+func NewSqliteStoreFromConnection(db DB, tableName string, path string, maxAge int, keyPairs ...[]byte) (*SqliteStore, error) {
 	// Make sure table name is enclosed.
 	tableName = "`" + strings.Trim(tableName, "`") + "`"
 
@@ -135,6 +141,7 @@ func (m *SqliteStore) New(r *http.Request, name string) (*sessions.Session, erro
 		if err == nil {
 			err = m.load(session)
 			if err == nil {
+				fmt.Println(err)
 				session.IsNew = false
 			} else {
 				err = nil
