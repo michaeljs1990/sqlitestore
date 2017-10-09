@@ -32,7 +32,7 @@ e.g.,
   	    "net/http"
       )
       
-      var store sqlitestore.Sqlite
+      var store *sqlitestore.SqliteStore
       func init() {
          var err error
          store, err = sqlitestore.NewSqliteStore("./database", "sessions", "/", 3600, []byte("<SecretKey>"))
