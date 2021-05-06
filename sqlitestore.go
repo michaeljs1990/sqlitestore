@@ -1,4 +1,4 @@
-/* Gorilla Sessions backend for MySQL.
+/* Gorilla Sessions backend for SQLite.
 
 Copyright (c) 2013 Contributors. See the list of contributors in the CONTRIBUTORS file for details.
 
